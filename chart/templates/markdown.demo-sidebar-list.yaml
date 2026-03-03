@@ -1,0 +1,15 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: demo-sidebar-list-dynamic
+  namespace: demo-system
+spec:
+  apiRef:
+    name: branches-list
+    namespace: demo-system
+  widgetData:
+    markdown: "Loading pipelines..."
+  widgetDataTemplate:
+    - forPath: markdown
+      expression: >
+        ${ [ .getBranches[] | "- **" + .name + "**" ] | join("\n") }

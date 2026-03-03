@@ -1,0 +1,20 @@
+{{- $data := include "demo.items" . | fromJson }}
+{{- $items := $data.items }}
+{{- range $index, $item := $items }}
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: demo-info-{{ $index }}
+  namespace: demo-system
+spec:
+  apiRef:
+    name: branches-list
+    namespace: demo-system
+  widgetData:
+    markdown: "Loading info..."
+  widgetDataTemplate:
+    - forPath: markdown
+      expression: >
+        ${ "**Branch Name:** " + .getBranches[{{ $index }}] }
+{{- end }}

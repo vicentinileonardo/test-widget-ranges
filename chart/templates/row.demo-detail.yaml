@@ -1,0 +1,32 @@
+{{- $data := include "demo.items" . | fromJson }}
+{{- $items := $data.items }}
+{{- range $index, $item := $items }}
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Row
+metadata:
+  name: demo-detail-row-{{ $index }}
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: [ piecharts, markdowns ]
+    items:
+      - resourceRefId: demo-pie-{{ $index }}
+        size: 8
+      - resourceRefId: demo-info-{{ $index }}
+        size: 16
+  resourcesRefs:
+    items:
+      - id: demo-pie-{{ $index }}
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: piecharts
+        name: demo-pie-{{ $index }}
+        namespace: demo-system
+        verb: GET
+      - id: demo-info-{{ $index }}
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: demo-info-{{ $index }}
+        namespace: demo-system
+        verb: GET
+{{- end }}

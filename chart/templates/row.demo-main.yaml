@@ -1,0 +1,28 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Row
+metadata:
+  name: demo-main-row
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: [ columns ]
+    alignment: top
+    items:
+      - resourceRefId: demo-sidebar-col
+        size: 6
+      - resourceRefId: demo-content-col
+        size: 18
+  resourcesRefs:
+    items:
+      - id: demo-sidebar-col
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: columns
+        name: demo-sidebar-col
+        namespace: demo-system
+        verb: GET
+      - id: demo-content-col
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: columns
+        name: demo-content-col
+        namespace: demo-system
+        verb: GET

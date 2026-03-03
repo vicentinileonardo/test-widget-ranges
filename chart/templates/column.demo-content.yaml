@@ -1,0 +1,24 @@
+{{- $data := include "demo.items" . | fromJson }}
+{{- $items := $data.items }}
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Column
+metadata:
+  name: demo-content-col
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: [ panels ]
+    items:
+      {{- range $index, $item := $items }}
+      - resourceRefId: demo-detail-panel-{{ $index }}
+      {{- end }}
+  resourcesRefs:
+    items:
+      {{- range $index, $item := $items }}
+      - id: demo-detail-panel-{{ $index }}
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: panels
+        name: demo-detail-panel-{{ $index }}
+        namespace: demo-system
+        verb: GET
+      {{- end }}

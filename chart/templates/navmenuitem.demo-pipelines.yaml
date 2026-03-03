@@ -1,0 +1,21 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: NavMenuItem
+metadata:
+  name: demo-pipelines-nav-item
+  namespace: demo-system
+spec:
+  widgetData:
+    label: Pipelines
+    icon: fa-rocket
+    path: /pipelines
+    order: 10
+    allowedResources: [ pages ]
+    resourceRefId: demo-pipelines-page
+  resourcesRefs:
+    items:
+      - id: demo-pipelines-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: pages
+        name: demo-pipelines-page
+        namespace: demo-system
+        verb: GET

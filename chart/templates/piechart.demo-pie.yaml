@@ -1,0 +1,31 @@
+{{- $data := include "demo.items" . | fromJson }}
+{{- $items := $data.items }}
+{{- range $index, $item := $items }}
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: PieChart
+metadata:
+  name: demo-pie-{{ $index }}
+  namespace: demo-system
+spec:
+  apiRef:
+    name: branches-list
+    namespace: demo-system
+  widgetData:
+    title: Status
+    series:
+      total: 1
+      data:
+        - label: "Active"
+          value: 1
+          color: "green"
+  widgetDataTemplate:
+    - forPath: series.data
+      expression: >
+        ${
+          if (.getBranches[{{ $index }}] == "main" or .getBranches[{{ $index }}] == "develop")
+          then [{ "label": "Protected", "value": 1, "color": "green" }]
+          else [{ "label": "Feature", "value": 1, "color": "blue" }]
+          end
+        }
+{{- end }}
