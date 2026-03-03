@@ -7,6 +7,7 @@ spec:
   widgetData:
     title: Pipelines
     icon: { name: "fa-rocket" }
+    actions: []
     items:
       - resourceRefId: demo-sidebar-list-dynamic
   resourcesRefs:
