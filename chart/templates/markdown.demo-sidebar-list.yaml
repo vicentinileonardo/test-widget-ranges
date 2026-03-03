@@ -12,4 +12,10 @@ spec:
   widgetDataTemplate:
     - forPath: markdown
       expression: >
-        ${ [ (.getBranches // [])[] | "- **" + .name + "**" ] | join("\n") }
+        ${ 
+          (
+            (.getBranches // []) 
+            | map("- **" + . + "**") 
+            | join("\n") 
+          )
+        }
