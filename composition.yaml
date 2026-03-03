@@ -1,0 +1,10 @@
+apiVersion: composition.krateo.io/v0-0-1
+kind: TestWidgetRanges
+metadata:
+  labels:
+    krateo.io/composition-version: v0-0-1
+  name: test-widget-ranges
+  namespace: demo-system
+spec:
+  test:
+    ok: true

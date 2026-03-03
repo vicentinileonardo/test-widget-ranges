@@ -1,0 +1,36 @@
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: branches-list
+  namespace: demo-system
+spec:
+  api:
+    # 1. Retrieve Branches
+    - name: getBranches
+      path: /branches               # Path relativo alla server-url
+      verb: GET
+      endpointRef:
+        name: branch-server-endpoint
+        namespace: demo-system
+      # IMPORTANTE: Estrae l'array dalla chiave "branches"
+      filter: ".branches" 
+
+    # 2. Update ConfigMap
+    - name: updateConfigMap
+      dependsOn:
+        name: getBranches
+      path: /api/v1/namespaces/demo-system/configmaps/demo-dashboard-data
+      verb: PUT
+      # Se la getBranches è vuota o fallisce, usiamo un array vuoto di default per non rompere la CM
+      payload: |
+        {
+          "apiVersion": "v1",
+          "kind": "ConfigMap",
+          "metadata": {
+            "name": "demo-dashboard-data",
+            "namespace": "demo-system"
+          },
+          "data": {
+            "items": "${ (.getBranches // []) | tojson }"
+          }
+        }

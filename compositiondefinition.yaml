@@ -1,0 +1,9 @@
+apiVersion: core.krateo.io/v1alpha1
+kind: CompositionDefinition
+metadata:
+  name: test-widget-ranges
+  namespace: default
+spec:
+  chart:
+    url: oci://ghcr.io/vicentinileonardo/test-widget-ranges/test-widget-ranges
+    version: 0.0.1

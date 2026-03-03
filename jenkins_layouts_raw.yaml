@@ -1,0 +1,430 @@
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: k8s-pods-list
+  namespace: demo-system
+spec:
+  api:
+    - name: pipelines
+      path: /api/v1/namespaces/krateo-system/pods
+      verb: GET
+  # Global filter applied to the final result
+  filter: >
+    {
+      "items": [ .pipelines.items[] | {
+        "name": .metadata.name,
+        "id": .metadata.uid,
+        "status": (if .status.phase == "Running" then "Running" elif .status.phase == "Succeeded" then "Success" else "Failed" end),
+        "color": (if .status.phase == "Running" then "blue" elif .status.phase == "Succeeded" then "green" else "red" end),
+        "date": .metadata.creationTimestamp,
+        "link": ("https://cloudbees.cloud.insiel.it/job/benzapp-portale/job/" + .metadata.name)
+      }]
+    }
+
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: NavMenuItem
+metadata:
+  name: demo-pipelines-nav-item
+  namespace: demo-system
+spec:
+  widgetData:
+    label: Pipelines
+    icon: fa-rocket
+    path: /pipelines
+    order: 10
+    allowedResources:
+      - pages
+    resourceRefId: demo-pipelines-page
+  resourcesRefs:
+    items:
+      - id: demo-pipelines-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: pages
+        name: demo-pipelines-page
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Page
+metadata:
+  name: demo-pipelines-page
+  namespace: demo-system
+spec:
+  widgetData:
+    title: Pipelines Dashboard
+    allowedResources:
+      - rows
+    items:
+      - resourceRefId: demo-main-row
+  resourcesRefs:
+    items:
+      - id: demo-main-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: rows
+        name: demo-main-row
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Row
+metadata:
+  name: demo-main-row
+  namespace: demo-system
+spec:
+  apiRef:
+    name: list-branches # todo: to be created
+    namespace: demo-system
+  widgetData:
+    allowedResources:
+      - columns
+    alignment: top
+    items:
+      - resourceRefId: demo-sidebar-col
+        size: 6
+      - resourceRefId: demo-content-col
+        size: 18
+  resourcesRefs:
+    items:
+      - id: demo-sidebar-col
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: columns
+        name: demo-sidebar-col
+        namespace: demo-system
+        verb: GET
+      - id: demo-content-col
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: columns
+        name: demo-content-col
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Column
+metadata:
+  name: demo-sidebar-col
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
+    items:
+      - resourceRefId: demo-sidebar-panel
+  resourcesRefs:
+    items:
+      - id: demo-sidebar-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: panels
+        name: demo-sidebar-panel
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Panel
+metadata:
+  name: demo-sidebar-panel
+  namespace: demo-system
+spec:
+  widgetData:
+    actions: {}
+    title: Pipelines
+    icon:
+      name: "fa-rocket"
+    items:
+      - resourceRefId: demo-sidebar-list-dynamic
+  resourcesRefs:
+    items:
+      - id: demo-sidebar-list-dynamic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: demo-sidebar-list-dynamic
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: demo-sidebar-list-dynamic
+  namespace: demo-system
+spec:
+  apiRef:
+    name: k8s-pods-list
+    namespace: demo-system
+  widgetData:
+    markdown: "Loading pipelines..."
+  widgetDataTemplate:
+    - forPath: markdown
+      expression: >
+        ${ [ .items[] | "- **" + .name + "**" ] | join("\n") }
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Column
+metadata:
+  name: demo-content-col
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
+    items:
+      - resourceRefId: demo-detail-panel-1
+      - resourceRefId: demo-detail-panel-2
+  resourcesRefs:
+    items:
+      - id: demo-detail-panel-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: panels
+        name: demo-detail-panel-1
+        namespace: demo-system
+        verb: GET
+      - id: demo-detail-panel-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: panels
+        name: demo-detail-panel-2
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Panel
+metadata:
+  name: demo-detail-panel-1
+  namespace: demo-system
+spec:
+  # Collega il pannello alla RESTAction per aggiornare il Titolo
+  apiRef:
+    name: k8s-pods-list
+    namespace: demo-system
+  widgetData:
+    actions: {}
+    title: Loading...
+    icon:
+      name: "fa-user-astronaut"
+    items:
+      - resourceRefId: demo-detail-row-1
+    footer:
+      - resourceRefId: demo-footer-link-1
+  # Sovrascrive il titolo con il nome del primo elemento (.items[0])
+  widgetDataTemplate:
+    - forPath: title
+      expression: ${ .items[0].name }
+  resourcesRefs:
+    items:
+      - id: demo-detail-row-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: rows
+        name: demo-detail-row-1
+        namespace: demo-system
+        verb: GET
+      - id: demo-footer-link-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: demo-footer-link-1
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: demo-footer-link-1
+  namespace: demo-system
+spec:
+  apiRef:
+    name: k8s-pods-list
+    namespace: demo-system
+  widgetData:
+    markdown: "Loading link..."
+  # Genera dinamicamente il link HTML nel footer
+  widgetDataTemplate:
+    - forPath: markdown
+      expression: >
+        ${ "[\(.items[0].link)](\(.items[0].link))" } 
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Row
+metadata:
+  name: demo-detail-row-1
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources:
+      - piecharts
+      - markdowns
+    items:
+      - resourceRefId: demo-pie-1
+        size: 8
+      - resourceRefId: demo-info-1
+        size: 16
+  resourcesRefs:
+    items:
+      - id: demo-pie-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: piecharts
+        name: demo-pie-1
+        namespace: demo-system
+        verb: GET
+      - id: demo-info-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: demo-info-1
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: PieChart
+metadata:
+  name: demo-pie-1
+  namespace: demo-system
+spec:
+  apiRef:
+    name: k8s-pods-list
+    namespace: demo-system
+  widgetData:
+    title: Status
+    series:
+      total: 1
+      data:
+        - label: Loading...
+          value: 1
+          color: "gray"
+  # Aggiorna i dati del grafico (Status e Colore)
+  widgetDataTemplate:
+    - forPath: series.data
+      expression: >
+        ${ [ { "label": .items[0].status, "value": 1, "color": .items[0].color } ] }
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: demo-info-1
+  namespace: demo-system
+spec:
+  apiRef:
+    name: k8s-pods-list
+    namespace: demo-system
+  widgetData:
+    markdown: "Loading info..."
+  # Compila i dettagli testuali (ID e Data)
+  widgetDataTemplate:
+    - forPath: markdown
+      expression: >
+        ${ "**id:** " + (.items[0].id | tostring) + "\n\n**Date:** " + .items[0].date }
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Panel
+metadata:
+  name: demo-detail-panel-2
+  namespace: demo-system
+spec:
+  apiRef:
+    name: k8s-pods-list
+    namespace: demo-system
+  widgetData:
+    actions: {}
+    title: Loading...
+    icon:
+      name: "fa-user-astronaut"
+    items:
+      - resourceRefId: demo-detail-row-2
+    footer:
+      - resourceRefId: demo-footer-link-2
+  widgetDataTemplate:
+    - forPath: title
+      expression: ${ .items[1].name }
+  resourcesRefs:
+    items:
+      - id: demo-detail-row-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: rows
+        name: demo-detail-row-2
+        namespace: demo-system
+        verb: GET
+      - id: demo-footer-link-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: demo-footer-link-2
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: demo-footer-link-2
+  namespace: demo-system
+spec:
+  apiRef:
+    name: k8s-pods-list
+    namespace: demo-system
+  widgetData:
+    markdown: "Loading link..."
+  widgetDataTemplate:
+    - forPath: markdown
+      expression: >
+        ${ "[\(.items[1].link)](\(.items[1].link))" }
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Row
+metadata:
+  name: demo-detail-row-2
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources:
+      - piecharts
+      - markdowns
+    items:
+      - resourceRefId: demo-pie-2
+        size: 8
+      - resourceRefId: demo-info-2
+        size: 16
+  resourcesRefs:
+    items:
+      - id: demo-pie-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: piecharts
+        name: demo-pie-2
+        namespace: demo-system
+        verb: GET
+      - id: demo-info-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: demo-info-2
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: PieChart
+metadata:
+  name: demo-pie-2
+  namespace: demo-system
+spec:
+  apiRef:
+    name: k8s-pods-list
+    namespace: demo-system
+  widgetData:
+    title: Status
+    series:
+      total: 1
+      data:
+        - label: Loading...
+          value: 1
+          color: "gray"
+  widgetDataTemplate:
+    - forPath: series.data
+      expression: >
+        ${ [ { "label": .items[1].status, "value": 1, "color": .items[1].color } ] }
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: demo-info-2
+  namespace: demo-system
+spec:
+  apiRef:
+    name: k8s-pods-list
+    namespace: demo-system
+  widgetData:
+    markdown: "Loading info..."
+  widgetDataTemplate:
+    - forPath: markdown
+      expression: >
+        ${ "**id:** " + (.items[1].id | tostring) + "\n\n**Date:** " + .items[1].date }

@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "test": {
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "default": true,
+          "title": "ok",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ok"
+      ],
+      "title": "test",
+      "type": "object"
+    }
+  },
+  "required": [
+    "test"
+  ],
+  "type": "object"
+}

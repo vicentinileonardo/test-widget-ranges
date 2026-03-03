@@ -1,0 +1,131 @@
+# ---------------------------------------------------------------------
+# 2. Struttura Statica (Nav, Page, Main Row, Sidebar)
+# ---------------------------------------------------------------------
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: NavMenuItem
+metadata:
+  name: demo-pipelines-nav-item
+  namespace: demo-system
+spec:
+  widgetData:
+    label: Pipelines
+    icon: fa-rocket
+    path: /pipelines
+    order: 10
+    allowedResources: [ pages ]
+    resourceRefId: demo-pipelines-page
+  resourcesRefs:
+    items:
+      - id: demo-pipelines-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: pages
+        name: demo-pipelines-page
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Page
+metadata:
+  name: demo-pipelines-page
+  namespace: demo-system
+spec:
+  widgetData:
+    title: Pipelines Dashboard
+    allowedResources: [ rows ]
+    items:
+      - resourceRefId: demo-main-row
+  resourcesRefs:
+    items:
+      - id: demo-main-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: rows
+        name: demo-main-row
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Row
+metadata:
+  name: demo-main-row
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: [ columns ]
+    alignment: top
+    items:
+      - resourceRefId: demo-sidebar-col
+        size: 6
+      - resourceRefId: demo-content-col
+        size: 18
+  resourcesRefs:
+    items:
+      - id: demo-sidebar-col
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: columns
+        name: demo-sidebar-col
+        namespace: demo-system
+        verb: GET
+      - id: demo-content-col
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: columns
+        name: demo-content-col
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Column
+metadata:
+  name: demo-sidebar-col
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: [ panels ]
+    items:
+      - resourceRefId: demo-sidebar-panel
+  resourcesRefs:
+    items:
+      - id: demo-sidebar-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: panels
+        name: demo-sidebar-panel
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Panel
+metadata:
+  name: demo-sidebar-panel
+  namespace: demo-system
+spec:
+  widgetData:
+    title: Pipelines
+    icon: { name: "fa-rocket" }
+    items:
+      - resourceRefId: demo-sidebar-list-dynamic
+  resourcesRefs:
+    items:
+      - id: demo-sidebar-list-dynamic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: demo-sidebar-list-dynamic
+        namespace: demo-system
+        verb: GET
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: demo-sidebar-list-dynamic
+  namespace: demo-system
+spec:
+  apiRef:
+    name: branches-list
+    namespace: demo-system
+  widgetData:
+    markdown: "Loading pipelines..."
+  # Nota: Qui usiamo .getBranches perché la restaction originale ha quella variabile
+  # Bisogna assicurarsi che il filtro della RESTAction ritorni la struttura corretta.
+  # Se la restAction aggiorna la CM, comunque la RestAction ha ancora i dati in memoria.
+  widgetDataTemplate:
+    - forPath: markdown
+      expression: >
+        ${ [ .getBranches[] | "- **" + .name + "**" ] | join("\n") }
