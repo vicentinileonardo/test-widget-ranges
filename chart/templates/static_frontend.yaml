@@ -1,6 +1,3 @@
-# ---------------------------------------------------------------------
-# 2. Struttura Statica (Nav, Page, Main Row, Sidebar)
-# ---------------------------------------------------------------------
 apiVersion: widgets.templates.krateo.io/v1beta1
 kind: NavMenuItem
 metadata:
