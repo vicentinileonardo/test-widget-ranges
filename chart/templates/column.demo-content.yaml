@@ -9,11 +9,15 @@ spec:
   widgetData:
     allowedResources: [ panels ]
     items:
+      {{- if $items }}
       {{- range $index, $item := $items }}
       - resourceRefId: demo-detail-panel-{{ $index }}
       {{- end }}
+      {{- else }} []
+      {{- end }}
   resourcesRefs:
     items:
+      {{- if $items }}
       {{- range $index, $item := $items }}
       - id: demo-detail-panel-{{ $index }}
         apiVersion: widgets.templates.krateo.io/v1beta1
@@ -21,4 +25,6 @@ spec:
         name: demo-detail-panel-{{ $index }}
         namespace: demo-system
         verb: GET
+      {{- end }}
+      {{- else }} []
       {{- end }}
