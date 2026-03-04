@@ -20,8 +20,6 @@ spec:
       path: /api/v1/namespaces/demo-system/configmaps/{{ .Release.Name }}
       verb: GET
       continueOnError: true
-      # If 404, return {}, else return the full object
-      filter: "if .oldRaw.code? == 404 then {} else .oldRaw end"
 
     # 3. GUARD & PUT if changed
     - name: update
