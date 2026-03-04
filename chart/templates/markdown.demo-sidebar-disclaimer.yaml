@@ -6,6 +6,4 @@ metadata:
 spec:
   widgetData:
     markdown: >
-      **The branch list above and the detail panels on the right may not be
-      aligned. Changes will synchronize after the next Composition
-      reconciliation cycle.**
+      **The branch list above take a reconciliation cycle to reflect the actual state.**
