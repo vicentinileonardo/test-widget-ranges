@@ -36,7 +36,7 @@ data:
 
     def get_time_bucket():
         """Returns current 5-minute bucket."""
-        return int(time.time() // 600)  # 600 seconds = 10 minutes, adjust as needed for different intervals
+        return int(time.time() // 20)  # 600 seconds = 10 minutes, adjust as needed for different intervals
 
 
     def generate_branches():
