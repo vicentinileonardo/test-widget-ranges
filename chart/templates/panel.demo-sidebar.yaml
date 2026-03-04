@@ -10,11 +10,18 @@ spec:
     actions: {}
     items:
       - resourceRefId: demo-sidebar-list-dynamic
+      - resourceRefId: demo-sidebar-disclaimer
   resourcesRefs:
     items:
       - id: demo-sidebar-list-dynamic
         apiVersion: widgets.templates.krateo.io/v1beta1
         resource: markdowns
         name: demo-sidebar-list-dynamic
+        namespace: demo-system
+        verb: GET
+      - id: demo-sidebar-disclaimer
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: demo-sidebar-disclaimer
         namespace: demo-system
         verb: GET

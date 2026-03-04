@@ -1,0 +1,11 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: demo-sidebar-disclaimer
+  namespace: demo-system
+spec:
+  widgetData:
+    markdown: >
+      **The branch list above and the detail panels on the right may not be
+      aligned. Changes will synchronize after the next Composition
+      reconciliation cycle.**
