@@ -1,11 +1,12 @@
 {{- $cm := lookup "v1" "ConfigMap" "demo-system" .Release.Name -}}
-{{- if not $cm }}
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}
   namespace: demo-system
 data:
+{{- if $cm }}
+  {{- toYaml $cm.data | nindent 2 }}
+{{- else }}
   items: "[]"
 {{- end }}
