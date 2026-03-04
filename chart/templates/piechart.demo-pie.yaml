@@ -24,7 +24,7 @@ spec:
       expression: >
         ${
           if (.getBranches[{{ $index }}] == null)
-          then [{ "label": "N/A", "value": 1, "color": "grey" }]
+          then [{ "label": "N/A", "value": 1, "color": "gray" }]
           elif ((.getBranches[{{ $index }}] // "") == "main" or (.getBranches[{{ $index }}] // "") == "develop")
           then [{ "label": "Protected", "value": 1, "color": "green" }]
           else [{ "label": "Feature", "value": 1, "color": "blue" }]
