@@ -27,13 +27,15 @@ spec:
     - name: update
       dependsOn:
         name: oldRaw
+        # Pass 'labels' from oldRaw into the iterator item
         iterator: >-
           if (.new) == ((.oldRaw.data.items // "[]" | fromjson? | sort)) 
           then [] 
           else [ 
             { 
               "newItems": .new, 
-              "resourceVersion": .oldRaw.metadata.resourceVersion 
+              "resourceVersion": .oldRaw.metadata.resourceVersion,
+              "labels": .oldRaw.metadata.labels
             } 
           ] 
           end
@@ -41,6 +43,7 @@ spec:
       verb: PUT
       headers:
         - "Content-Type: application/json"
+      # Include .labels in the payload metadata
       payload: |
         ${
           {
@@ -50,6 +53,7 @@ spec:
               "name": "{{ .Release.Name }}",
               "namespace": "demo-system",
               "resourceVersion": .resourceVersion,
+              "labels": .labels,
               "annotations": {
                 "krateo.io/last-updated": (now | todate) 
               }
