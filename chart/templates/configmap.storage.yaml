@@ -3,9 +3,9 @@ kind: ConfigMap
 metadata:
   name: demo-dashboard-data
   namespace: demo-system
-  #annotations:
-  #  # Questa annotazione dice ad Helm di non sovrascrivere le modifiche fatte dalla RESTAction
-  #  "helm.sh/resource-policy": keep
+  annotations:
+    # Questa annotazione dice ad Helm di non sovrascrivere le modifiche fatte dalla RESTAction
+    "helm.sh/resource-policy": keep
 data:
   # Inizializzato vuoto per il primo run
   items: "[]"
