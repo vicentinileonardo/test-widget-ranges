@@ -6,6 +6,7 @@ metadata:
 spec:
   widgetData:
     markdown: >
-      **The branch list above and the detail panels on the right may not be
-      aligned. Changes will synchronize after the next Composition
-      reconciliation cycle.**
+      **The branch list above and the detail panels on the right are updated
+      every 3 minutes by default (aligned with the CDC reconciliation loop,
+      env var `COMPOSITION_CONTROLLER_RESYNC_INTERVAL`).**
+      
