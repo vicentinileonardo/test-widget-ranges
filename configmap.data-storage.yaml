@@ -1,0 +1,10 @@
+
+# this is just for testing, the real configmap is inside the chart
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-dashboard-data
+  namespace: demo-system
+data:
+  items: "[]"
+

@@ -5,27 +5,42 @@ metadata:
   namespace: demo-system
 spec:
   api:
-    # 1. Retrieve Branches
-    - name: getBranches
+    # 1. NEW STATE: Fetch and Sort
+    - name: new
       path: /branches
-      verb: GET
       endpointRef:
         name: branch-server-endpoint
         namespace: demo-system
-      filter: ".getBranches.branches"
-    
-    # guardia
+      filter: ".new.branches | sort"
 
-    # 2. Update ConfigMap
-    - name: updateConfigMap
+    # 2. OLD STATE: Fetch Raw Object
+    - name: oldRaw
       dependsOn:
-        name: getBranches
+        name: new
+      path: /api/v1/namespaces/demo-system/configmaps/{{ .Release.Name }}
+      verb: GET
+      continueOnError: true
+      # If 404, return {}, else return the full object
+      filter: "if .oldRaw.code? == 404 then {} else .oldRaw end"
+
+    # 3. GUARD & PUT if changed
+    - name: update
+      dependsOn:
+        name: oldRaw
+        iterator: >-
+          if (.new) == ((.oldRaw.data.items // "[]" | fromjson? | sort)) 
+          then [] 
+          else [ 
+            { 
+              "newItems": .new, 
+              "resourceVersion": .oldRaw.metadata.resourceVersion 
+            } 
+          ] 
+          end
       path: /api/v1/namespaces/demo-system/configmaps/{{ .Release.Name }}
       verb: PUT
       headers:
         - "Content-Type: application/json"
-      # FIX: Use a full JQ object construction wrapped in ${}
-      # This ensures the payload is generated correctly before sending.
       payload: |
         ${
           {
@@ -33,10 +48,14 @@ spec:
             "kind": "ConfigMap",
             "metadata": {
               "name": "{{ .Release.Name }}",
-              "namespace": "demo-system"
+              "namespace": "demo-system",
+              "resourceVersion": .resourceVersion,
+              "annotations": {
+                "krateo.io/last-updated": (now | todate) 
+              }
             },
             "data": {
-              "items": (.getBranches // [] | tojson)
+              "items": (.newItems | tojson)
             }
-          }
+          } | .metadata |= with_entries(select(.value != null))
         }
