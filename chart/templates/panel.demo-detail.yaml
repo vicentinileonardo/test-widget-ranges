@@ -21,7 +21,7 @@ spec:
       - resourceRefId: demo-footer-link-{{ $index }}
   widgetDataTemplate:
     - forPath: title
-      expression: ${ .getBranches[{{ $index }}] }
+      expression: ${ (.getBranches[{{ $index }}] // "N/A") }
   resourcesRefs:
     items:
       - id: demo-detail-row-{{ $index }}

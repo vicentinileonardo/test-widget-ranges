@@ -16,5 +16,5 @@ spec:
   widgetDataTemplate:
     - forPath: markdown
       expression: >
-        ${ "[\(.getBranches[{{ $index }}])](/git/repo/tree/\(.getBranches[{{ $index }}]))" }
+        ${ "[\(.getBranches[{{ $index }}] // "N/A")](/git/repo/tree/\(.getBranches[{{ $index }}] // "N/A"))" }
 {{- end }}

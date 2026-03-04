@@ -22,7 +22,7 @@ data:
         "release/v1.0",
         "release/v2.0",
         "experiment/new-ui",
-        "experiment/ai-integration"
+        "experiment/ai-integration",
         "feature/dashboard",
         "feature/notifications",
         "bugfix/footer",
@@ -36,15 +36,15 @@ data:
 
     def get_time_bucket():
         """Returns current 5-minute bucket."""
-        return int(time.time() // 300)  # 300 seconds = 5 minutes
+        return int(time.time() // 600)  # 600 seconds = 10 minutes, adjust as needed for different intervals
 
 
     def generate_branches():
         """
-        Generate deterministic random branches per 5-minute window.
+        Generate deterministic random branches per 10-minute window.
         This ensures:
-        - Same result within the same 5 minutes
-        - Different result after 5 minutes
+        - Same result within the same 10 minutes
+        - Different result after 10 minutes
         """
         bucket = get_time_bucket()
         random.seed(bucket)

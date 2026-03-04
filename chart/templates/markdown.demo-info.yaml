@@ -16,5 +16,5 @@ spec:
   widgetDataTemplate:
     - forPath: markdown
       expression: >
-        ${ "**Branch Name:** " + .getBranches[{{ $index }}] }
+        ${ "**Branch Name:** " + (.getBranches[{{ $index }}] // "N/A") }
 {{- end }}

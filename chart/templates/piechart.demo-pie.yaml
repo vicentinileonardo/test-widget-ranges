@@ -23,7 +23,7 @@ spec:
     - forPath: series.data
       expression: >
         ${
-          if (.getBranches[{{ $index }}] == "main" or .getBranches[{{ $index }}] == "develop")
+          if ((.getBranches[{{ $index }}] // "") == "main" or (.getBranches[{{ $index }}] // "") == "develop")
           then [{ "label": "Protected", "value": 1, "color": "green" }]
           else [{ "label": "Feature", "value": 1, "color": "blue" }]
           end
