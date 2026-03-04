@@ -8,26 +8,18 @@ metadata:
   name: demo-pie-{{ $index }}
   namespace: demo-system
 spec:
-  apiRef:
-    name: branches-list
-    namespace: demo-system
   widgetData:
     title: Status
     series:
       total: 1
       data:
-        - label: "Active"
+        {{- if or (eq $item "main") (eq $item "develop") }}
+        - label: "Protected"
           value: 1
           color: "green"
-  widgetDataTemplate:
-    - forPath: series.data
-      expression: >
-        ${
-          if (.getBranches[{{ $index }}] == null)
-          then [{ "label": "N/A", "value": 1, "color": "gray" }]
-          elif ((.getBranches[{{ $index }}] // "") == "main" or (.getBranches[{{ $index }}] // "") == "develop")
-          then [{ "label": "Protected", "value": 1, "color": "green" }]
-          else [{ "label": "Feature", "value": 1, "color": "blue" }]
-          end
-        }
+        {{- else }}
+        - label: "Feature"
+          value: 1
+          color: "blue"
+        {{- end }}
 {{- end }}

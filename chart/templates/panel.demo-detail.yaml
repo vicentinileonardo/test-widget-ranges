@@ -8,20 +8,14 @@ metadata:
   name: demo-detail-panel-{{ $index }}
   namespace: demo-system
 spec:
-  apiRef:
-    name: branches-list
-    namespace: demo-system
   widgetData:
-    title: {{ $item | default "Loading..." }}
+    title: "{{ $item | default "Loading..." }}"
     icon: { name: "fa-code-branch" }
     actions: {}
     items:
       - resourceRefId: demo-detail-row-{{ $index }}
     footer:
       - resourceRefId: demo-footer-link-{{ $index }}
-  widgetDataTemplate:
-    - forPath: title
-      expression: ${ (.getBranches[{{ $index }}] // "N/A") }
   resourcesRefs:
     items:
       - id: demo-detail-row-{{ $index }}

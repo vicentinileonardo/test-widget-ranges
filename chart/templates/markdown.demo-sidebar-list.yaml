@@ -1,3 +1,5 @@
+{{- $data := include "demo.items" . | fromJson }}
+{{- $items := $data.items }}
 apiVersion: widgets.templates.krateo.io/v1beta1
 kind: Markdown
 metadata:
@@ -8,14 +10,11 @@ spec:
     name: branches-list
     namespace: demo-system
   widgetData:
-    markdown: "Loading pipelines..."
-  widgetDataTemplate:
-    - forPath: markdown
-      expression: >
-        ${ 
-          (
-            (.getBranches // []) 
-            | map("- **" + . + "**") 
-            | join("\n") 
-          )
-        }
+    markdown: |
+      {{- if $items }}
+      {{- range $item := $items }}
+      - **{{ $item }}**
+      {{- end }}
+      {{- else }}
+      *No branches available yet.*
+      {{- end }}
