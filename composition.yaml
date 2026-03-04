@@ -1,8 +1,8 @@
-apiVersion: composition.krateo.io/v0-0-12
+apiVersion: composition.krateo.io/v0-0-13
 kind: TestWidgetRanges
 metadata:
   labels:
-    krateo.io/composition-version: v0-0-12
+    krateo.io/composition-version: v0-0-13
   name: test-widget-ranges
   namespace: demo-system
 spec:
