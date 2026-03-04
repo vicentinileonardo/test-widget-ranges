@@ -13,12 +13,14 @@ spec:
         name: branch-server-endpoint
         namespace: demo-system
       filter: ".getBranches.branches"
+    
+    # guardia
 
     # 2. Update ConfigMap
     - name: updateConfigMap
       dependsOn:
         name: getBranches
-      path: /api/v1/namespaces/demo-system/configmaps/demo-dashboard-data
+      path: /api/v1/namespaces/demo-system/configmaps/{{ .Release.Name }}
       verb: PUT
       headers:
         - "Content-Type: application/json"
@@ -30,7 +32,7 @@ spec:
             "apiVersion": "v1",
             "kind": "ConfigMap",
             "metadata": {
-              "name": "demo-dashboard-data",
+              "name": "{{ .Release.Name }}",
               "namespace": "demo-system"
             },
             "data": {
