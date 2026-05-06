@@ -1,0 +1,33 @@
+{{- $data := include "kog.items" . | fromJson }}
+{{- $items := $data.items }}
+{{- range $index, $item := $items }}
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Panel
+metadata:
+  name: kog-detail-panel-{{ $index }}
+  namespace: demo-system
+spec:
+  widgetData:
+    title: "{{ $item | default "Loading..." }}"
+    icon: { name: "fa-code-branch" }
+    actions: {}
+    items:
+      - resourceRefId: kog-detail-row-{{ $index }}
+    footer:
+      - resourceRefId: kog-footer-link-{{ $index }}
+  resourcesRefs:
+    items:
+      - id: kog-detail-row-{{ $index }}
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: rows
+        name: kog-detail-row-{{ $index }}
+        namespace: demo-system
+        verb: GET
+      - id: kog-footer-link-{{ $index }}
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: kog-footer-link-{{ $index }}
+        namespace: demo-system
+        verb: GET
+{{- end }}

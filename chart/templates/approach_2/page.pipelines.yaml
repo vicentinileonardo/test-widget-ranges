@@ -1,0 +1,19 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Page
+metadata:
+  name: kog-pipelines-page
+  namespace: demo-system
+spec:
+  widgetData:
+    title: Pipelines Dashboard (KOG)
+    allowedResources: [ rows ]
+    items:
+      - resourceRefId: kog-main-row
+  resourcesRefs:
+    items:
+      - id: kog-main-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: rows
+        name: kog-main-row
+        namespace: demo-system
+        verb: GET

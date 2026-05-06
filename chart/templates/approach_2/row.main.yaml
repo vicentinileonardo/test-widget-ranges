@@ -1,0 +1,28 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Row
+metadata:
+  name: kog-main-row
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: [ columns ]
+    alignment: top
+    items:
+      - resourceRefId: kog-sidebar-col
+        size: 6
+      - resourceRefId: kog-content-col
+        size: 18
+  resourcesRefs:
+    items:
+      - id: kog-sidebar-col
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: columns
+        name: kog-sidebar-col
+        namespace: demo-system
+        verb: GET
+      - id: kog-content-col
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: columns
+        name: kog-content-col
+        namespace: demo-system
+        verb: GET

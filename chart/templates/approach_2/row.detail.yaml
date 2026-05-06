@@ -1,0 +1,32 @@
+{{- $data := include "kog.items" . | fromJson }}
+{{- $items := $data.items }}
+{{- range $index, $item := $items }}
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Row
+metadata:
+  name: kog-detail-row-{{ $index }}
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: [ piecharts, markdowns ]
+    items:
+      - resourceRefId: kog-pie-{{ $index }}
+        size: 8
+      - resourceRefId: kog-info-{{ $index }}
+        size: 16
+  resourcesRefs:
+    items:
+      - id: kog-pie-{{ $index }}
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: piecharts
+        name: kog-pie-{{ $index }}
+        namespace: demo-system
+        verb: GET
+      - id: kog-info-{{ $index }}
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: kog-info-{{ $index }}
+        namespace: demo-system
+        verb: GET
+{{- end }}

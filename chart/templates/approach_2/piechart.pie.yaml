@@ -1,0 +1,25 @@
+{{- $data := include "kog.items" . | fromJson }}
+{{- $items := $data.items }}
+{{- range $index, $item := $items }}
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: PieChart
+metadata:
+  name: kog-pie-{{ $index }}
+  namespace: demo-system
+spec:
+  widgetData:
+    title: Status
+    series:
+      total: 1
+      data:
+        {{- if or (eq $item "main") (eq $item "develop") }}
+        - label: "Protected"
+          value: 1
+          color: "green"
+        {{- else }}
+        - label: "Feature"
+          value: 1
+          color: "blue"
+        {{- end }}
+{{- end }}

@@ -1,0 +1,13 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: kog-sidebar-disclaimer
+  namespace: demo-system
+spec:
+  widgetData:
+    markdown: >
+      **The branch list above and the detail panels on the right are sourced
+      from the `BranchList` KOG resource. The rest-dynamic-controller reconcile
+      loop calls `GET /branches` and updates `status.branches` automatically
+      (default interval ~60 s, controlled by the RDC `RESYNC_INTERVAL` env var).
+      No RESTAction is involved — the data pipeline runs entirely through KOG.**

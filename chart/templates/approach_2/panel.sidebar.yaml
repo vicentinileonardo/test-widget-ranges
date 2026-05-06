@@ -1,0 +1,27 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Panel
+metadata:
+  name: kog-sidebar-panel
+  namespace: demo-system
+spec:
+  widgetData:
+    title: Pipelines
+    icon: { name: "fa-rocket" }
+    actions: {}
+    items:
+      - resourceRefId: kog-sidebar-list-dynamic
+      - resourceRefId: kog-sidebar-disclaimer
+  resourcesRefs:
+    items:
+      - id: kog-sidebar-list-dynamic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: kog-sidebar-list-dynamic
+        namespace: demo-system
+        verb: GET
+      - id: kog-sidebar-disclaimer
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: markdowns
+        name: kog-sidebar-disclaimer
+        namespace: demo-system
+        verb: GET

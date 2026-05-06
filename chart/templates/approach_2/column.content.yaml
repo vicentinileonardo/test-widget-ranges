@@ -1,0 +1,30 @@
+{{- $data := include "kog.items" . | fromJson }}
+{{- $items := $data.items }}
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Column
+metadata:
+  name: kog-content-col
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: [ panels ]
+    items:
+      {{- if $items }}
+      {{- range $index, $item := $items }}
+      - resourceRefId: kog-detail-panel-{{ $index }}
+      {{- end }}
+      {{- else }} []
+      {{- end }}
+  resourcesRefs:
+    items:
+      {{- if $items }}
+      {{- range $index, $item := $items }}
+      - id: kog-detail-panel-{{ $index }}
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: panels
+        name: kog-detail-panel-{{ $index }}
+        namespace: demo-system
+        verb: GET
+      {{- end }}
+      {{- else }} []
+      {{- end }}

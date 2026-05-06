@@ -1,0 +1,18 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Column
+metadata:
+  name: kog-sidebar-col
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: [ panels ]
+    items:
+      - resourceRefId: kog-sidebar-panel
+  resourcesRefs:
+    items:
+      - id: kog-sidebar-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: panels
+        name: kog-sidebar-panel
+        namespace: demo-system
+        verb: GET

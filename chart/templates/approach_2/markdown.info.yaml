@@ -1,0 +1,13 @@
+{{- $data := include "kog.items" . | fromJson }}
+{{- $items := $data.items }}
+{{- range $index, $item := $items }}
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: kog-info-{{ $index }}
+  namespace: demo-system
+spec:
+  widgetData:
+    markdown: "**Branch Name:** {{ $item }}"
+{{- end }}

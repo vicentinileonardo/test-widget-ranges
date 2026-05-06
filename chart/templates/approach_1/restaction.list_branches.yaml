@@ -26,6 +26,8 @@ spec:
       dependsOn:
         name: oldRaw
         # Pass both 'labels' and 'annotations' from oldRaw
+        # the if of the iterator compares the new sorted list with the old list (if it exists)
+        # `then []` acts like a no-op if there are no changes, preventing unnecessary updates
         iterator: >-
           if (.new) == ((.oldRaw.data.items // "[]" | fromjson? | sort)) 
           then [] 

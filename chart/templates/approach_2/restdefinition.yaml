@@ -1,0 +1,16 @@
+apiVersion: ogen.krateo.io/v1alpha1
+kind: RestDefinition
+metadata:
+  name: demo-branch-list-rd
+  namespace: demo-system
+spec:
+  oasPath: configmap://demo-system/demo-branch-list-oas/oas.yaml
+  resourceGroup: branches.demo.krateo.io
+  resource:
+    kind: BranchList
+    additionalStatusFields:
+      - branches
+    verbsDescription:
+      - action: get
+        method: GET
+        path: /branches

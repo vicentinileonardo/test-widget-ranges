@@ -1,0 +1,17 @@
+{{- $data := include "kog.items" . | fromJson }}
+{{- $items := $data.items }}
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Markdown
+metadata:
+  name: kog-sidebar-list-dynamic
+  namespace: demo-system
+spec:
+  widgetData:
+    markdown: |
+      {{- if $items }}
+      {{- range $item := $items }}
+      - **{{ $item }}**
+      {{- end }}
+      {{- else }}
+      *No branches available yet.*
+      {{- end }}

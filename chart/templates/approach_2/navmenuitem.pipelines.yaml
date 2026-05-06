@@ -1,0 +1,21 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: NavMenuItem
+metadata:
+  name: kog-pipelines-nav-item
+  namespace: demo-system
+spec:
+  widgetData:
+    label: Pipelines (KOG)
+    icon: fa-rocket
+    path: /kog-pipelines
+    order: 11
+    allowedResources: [ pages ]
+    resourceRefId: kog-pipelines-page
+  resourcesRefs:
+    items:
+      - id: kog-pipelines-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: pages
+        name: kog-pipelines-page
+        namespace: demo-system
+        verb: GET

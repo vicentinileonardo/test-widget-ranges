@@ -1,0 +1,6 @@
+apiVersion: branches.demo.krateo.io/v1alpha1
+kind: BranchList
+metadata:
+  name: demo-branch-list
+  namespace: demo-system
+spec: {}
