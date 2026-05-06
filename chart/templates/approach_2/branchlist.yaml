@@ -1,6 +1,9 @@
+{{- $crd := lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "branchlists.branches.demo.krateo.io" -}}
+{{- if $crd -}}
 apiVersion: branches.demo.krateo.io/v1alpha1
 kind: BranchList
 metadata:
   name: demo-branch-list
   namespace: demo-system
 spec: {}
+{{- end -}}
